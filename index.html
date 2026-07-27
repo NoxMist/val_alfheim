@@ -562,6 +562,108 @@
         opacity: 1;
         transform: scale(1.1);
       }
+          /* --- RESPONSIVE: MÓVIL / TABLET --- */
+    @media (max-width: 860px) {
+      html, body {
+        height: auto;
+        min-height: 100vh;
+        overflow-y: auto;
+        overflow-x: hidden;
+      }
+
+      body {
+        align-items: flex-start;
+        background-attachment: fixed;
+      }
+
+      .canvas-container {
+        width: 100%;
+        max-width: 100%;
+        height: auto;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        border-radius: 0;
+        border: none;
+        box-shadow: none;
+      }
+
+      /* el personaje sube arriba de todo, antes del texto */
+      .center-panel {
+        order: -1;
+        min-height: 46vh;
+        flex-shrink: 0;
+      }
+
+      .left-panel {
+        padding: 28px 24px 32px;
+        background: linear-gradient(180deg, rgba(6, 6, 8, 0.98) 0%, rgba(70, 3, 3, 0.55) 100%);
+      }
+
+      /* el panel vertical es decorativo, se quita en movil */
+      .right-panel {
+        display: none;
+      }
+
+      .nihility-bg-text {
+        font-size: 5.5rem;
+      }
+
+      .large-bg-kanji {
+        font-size: 8rem;
+      }
+
+      .hero-quote-header {
+        font-size: 0.68rem;
+        line-height: 1.4;
+      }
+
+      .main-kanji {
+        font-size: 2.6rem;
+        letter-spacing: -3px;
+      }
+
+      .japanese-sub {
+        font-size: 0.8rem;
+        letter-spacing: 4px;
+      }
+
+      .music-player {
+        margin-top: 22px;
+        padding: 14px;
+      }
+
+      .track-title {
+        width: 55%;
+      }
+
+      .character-root {
+        width: 150%;
+        left: -25%;
+      }
+
+      .art-window {
+        width: 94%;
+        height: 92%;
+      }
+    }
+
+    @media (max-width: 420px) {
+      .main-kanji {
+        font-size: 2.1rem;
+      }
+
+      .large-bg-kanji {
+        font-size: 6rem;
+      }
+
+      .left-panel {
+        padding: 22px 18px 26px;
+      }
+
+      .volume-container {
+        display: none;
+      }
     }
   </style>
 </head>
