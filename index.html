@@ -21,8 +21,9 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      min-height: auto;
-      overflow: hidden;
+      min-height: 100vh;
+      overflow-x: hidden;
+      overflow-y: auto;
     }
 
     /* --- CONTENEDOR CON BORDES DESVANECIDOS --- */
@@ -480,7 +481,7 @@
     }
 
     .diamond {
-      color: #d40a0a;
+      color: #a31818;
       font-size: 0.7rem;
       animation: pulse-glow 2s infinite ease-in-out;
     }
@@ -562,7 +563,9 @@
         opacity: 1;
         transform: scale(1.1);
       }
-          /* --- RESPONSIVE: MÓVIL / TABLET --- */
+    }
+
+    /* --- RESPONSIVE: MÓVIL / TABLET --- */
     @media (max-width: 860px) {
       html, body {
         height: auto;
@@ -719,7 +722,7 @@
 
       <div class="left-footer">
         <p class="game-meta">MODE SURTENSION // FRÉQUENCE STABLE</p>
-        <a href="article.html" class="tag-pill" style="text-decoration: none; cursor: pointer;">PRESS HERE</a>
+        <a href="article.html" class="tag-pill" style="text-decoration: none; cursor: pointer;">Press Here</a>
       </div>
     </section>
 
