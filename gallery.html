@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="./gallery-style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nordlys Gallery</title>
+  </head>
+  <body>
+    <canvas class="webgl"></canvas>
+    <div class="glow"></div>
+    <canvas id="petals-canvas"></canvas>
+
+    <nav>
+      <div class="logo">
+        <a href="index.html" style="text-decoration:none; color:inherit;">
+          <h1>Nordlys</h1>
+        </a>
+        <p>Portraits, sanctuaire &amp; musique</p>
+      </div>
+      <ul class="menu">
+        <li><a href="index.html" style="color: inherit; text-decoration: none;">Home</a></li>
+        <li class="active">Images</li>
+        <li><a href="article.html" style="color: inherit; text-decoration: none;">Information</a></li>
+      </ul>
+      <div class="nav-right">
+        <span class="lang"><b>Valentine Alfheim</b></span>
+      </div>
+    </nav>
+
+    <aside class="hero">
+      <p class="eyebrow">Archives<span></span></p>
+      <h2>Chaque regard<br />révèle une <em>histoire</em>.</h2>
+      <p class="lead">A collection of portraits that make up Val's world.</p>
+      <div class="cta ui-open">
+        <span>Explorer</span>
+        <span class="circle">→</span>
+      </div>
+    </aside>
+
+    <aside class="panel">
+      <div class="counter">
+        <span class="idx">/ <span class="n">01</span></span>
+        <span class="t">Moments Immortels</span>
+      </div>
+      <ol class="cats">
+        <li class="active"><i>01</i>Portraits</li>
+        <li><i>02</i>La Demeure</li>
+        <li><i>03</i>Instruments</li>
+        <li><i>04</i>Nordlys</li>
+      </ol>
+      <div class="side-thumbs">
+        <div class="thumb" data-index="0"><img src="img/valekids.png" alt="" crossorigin="anonymous" /></div>
+        <div class="thumb" data-index="1"><img src="img/valemansion.jpg" alt="" crossorigin="anonymous" /></div>
+        <div class="thumb" data-index="2"><img src="img/valemansion2.jpg" alt="" crossorigin="anonymous" /></div>
+        <div class="thumb" data-index="3"><img src="img/valemansion3.jpg" alt="" crossorigin="anonymous" /></div>
+      </div>
+      <div class="side-arrows">
+        <button class="circle ui-prev">←</button>
+        <button class="circle ui-next">→</button>
+      </div>
+    </aside>
+
+    <div class="play-line">
+      <span class="circle">▶</span>
+      <p>Le feu est art<br /> En þú ert speglunin</p>
+    </div>
+
+    <div class="strip">
+      <button class="circle ui-prev">←</button>
+      <div class="thumbs">
+        <!-- REEMPLAZAR cada src por tus propias imágenes -->
+        <div class="thumb" data-index="0"><img src="img/valekids.png" alt="" crossorigin="anonymous" /></div>
+        <div class="thumb" data-index="1"><img src="img/valemansion.jpg" alt="" crossorigin="anonymous" /></div>
+        <div class="thumb" data-index="2"><img src="img/valemansion2.jpg" alt="" crossorigin="anonymous" /></div>
+        <div class="thumb" data-index="3"><img src="img/valemansion3.jpg" alt="" crossorigin="anonymous" /></div>
+        <div class="thumb" data-index="4"><img src="img/valepiano.jpg" alt="" crossorigin="anonymous" /></div>
+        <div class="thumb" data-index="5"><img src="img/valeviolin.png" alt="" crossorigin="anonymous" /></div>
+        <div class="thumb" data-index="6"><img src="img/valeharp.jpg" alt="" crossorigin="anonymous" /></div>
+        <div class="thumb" data-index="7"><img src="img/valeflute.png" alt="" crossorigin="anonymous" /></div>
+      </div>
+      <button class="circle ui-next">→</button>
+    </div>
+
+    <div class="dashes">
+      <i class="active"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+    </div>
+
+    <div class="socials">ARCHIVES<b>·</b>NORDLYS<b>·</b>VAL</div>
+
+    <div class="scroll-hint">Glisser pour découvrir<span class="l"></span><span class="mouse"></span></div>
+
+    <script type="importmap">
+    {
+      "imports": {
+        "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+        "three/examples/jsm/postprocessing/EffectComposer.js": "https://unpkg.com/three@0.160.0/examples/jsm/postprocessing/EffectComposer.js",
+        "three/examples/jsm/postprocessing/RenderPass.js": "https://unpkg.com/three@0.160.0/examples/jsm/postprocessing/RenderPass.js",
+        "three/examples/jsm/postprocessing/UnrealBloomPass.js": "https://unpkg.com/three@0.160.0/examples/jsm/postprocessing/UnrealBloomPass.js",
+        "three/examples/jsm/postprocessing/ShaderPass.js": "https://unpkg.com/three@0.160.0/examples/jsm/postprocessing/ShaderPass.js",
+        "three/examples/jsm/postprocessing/OutputPass.js": "https://unpkg.com/three@0.160.0/examples/jsm/postprocessing/OutputPass.js",
+        "three/examples/jsm/objects/Reflector.js": "https://unpkg.com/three@0.160.0/examples/jsm/objects/Reflector.js",
+        "gsap": "https://unpkg.com/gsap@3.12.5/index.js",
+        "lil-gui": "https://unpkg.com/lil-gui@0.19.2/dist/lil-gui.esm.js"
+      }
+    }
+    </script>
+    <script type="module" src="./gallery-script.js"></script>
+  </body>
+</html>

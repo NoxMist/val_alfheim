@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Valentine Alfheim - Character Info</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&family=Syncopate:wght@700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      height: 100%;
+    }
+
+    body {
+      background: #060608;
+      background-image: radial-gradient(circle at center, #2b0404 0%, #060608 100%);
+      font-family: 'Noto Sans JP', sans-serif;
+      color: #e2e8f0;
+      position: relative;
+    }
+
+    /* --- CAPA DE FONDO FIJA (imagen, viñeta, puntos, pétalos) --- */
+    .bg-fixed {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 0;
+      overflow: hidden;
+      /* REEMPLAZAR: pon aquí una imagen de fondo propia */
+      background-image: url('img/arle1.jpg');
+      background-size: cover;
+      background-position: center;
+    }
+
+    .bg-fixed::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle, transparent 30%, rgba(6, 6, 8, 0.92) 100%);
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    .canvas-dot-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: radial-gradient(rgba(255, 255, 255, 0.04) 15%, transparent 16%);
+      background-size: 6px 6px;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    #petals-canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 3;
+      pointer-events: none;
+    }
+
+    .ui-corner-bracket {
+      position: fixed;
+      width: 15px;
+      height: 15px;
+      border: 2px solid rgba(255, 255, 255, 0.15);
+      z-index: 30;
+      pointer-events: none;
+    }
+
+    .top-left {
+      top: 25px;
+      left: 25px;
+      border-right: none;
+      border-bottom: none;
+    }
+
+    .bottom-right {
+      bottom: 25px;
+      right: 25px;
+      border-left: none;
+      border-top: none;
+    }
+
+    /* --- CONTENIDO SCROLLEABLE --- */
+    .content-wrap {
+      position: relative;
+      z-index: 10;
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 90px 30px 120px;
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: #cbd5e1;
+      text-decoration: none;
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 6px 16px;
+      border-radius: 20px;
+      transition: all 0.25s ease;
+      margin-bottom: 50px;
+    }
+
+    .back-link:hover {
+      background: #ffffff;
+      color: #060608;
+    }
+
+    .char-header {
+      margin-bottom: 60px;
+      border-left: 3px solid #b5893d;
+      padding-left: 18px;
+    }
+
+    .char-eyebrow {
+      font-family: 'Syncopate', sans-serif;
+      font-size: 0.7rem;
+      letter-spacing: 4px;
+      color: #b5893d;
+      text-transform: uppercase;
+    }
+
+    .char-name {
+      font-size: 3.2rem;
+      font-weight: 900;
+      color: #ffffff;
+      line-height: 1;
+      letter-spacing: -1px;
+      margin-top: 6px;
+      text-shadow: 2px 2px 0px #5e4319, 4px 4px 25px rgba(0, 0, 0, 0.9);
+    }
+
+    .char-subname {
+      font-size: 0.85rem;
+      color: #94a3b8;
+      letter-spacing: 3px;
+      margin-top: 8px;
+      text-transform: uppercase;
+    }
+
+    section.block {
+      margin-bottom: 55px;
+      background: rgba(6, 6, 8, 0.55);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 6px;
+      padding: 28px 30px;
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+    }
+
+    h2.section-title {
+      font-family: 'Syncopate', sans-serif;
+      font-size: 0.9rem;
+      letter-spacing: 3px;
+      color: #ffffff;
+      text-transform: uppercase;
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    h2.section-title::before {
+      content: '';
+      width: 18px;
+      height: 2px;
+      background: #b5893d;
+      display: inline-block;
+    }
+
+    p.lore-text {
+      font-size: 0.9rem;
+      line-height: 1.85;
+      color: #cbd5e1;
+      margin-bottom: 16px;
+      text-align: justify;
+    }
+
+    p.lore-text:last-child {
+      margin-bottom: 0;
+    }
+
+    .ability-name {
+      color: #ffffff;
+      font-weight: 700;
+    }
+
+    .roleplay-note {
+      font-size: 0.7rem;
+      letter-spacing: 1px;
+      color: #b5893d;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+      font-weight: 700;
+    }
+
+    ul.tag-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    ul.tag-list li {
+      font-size: 0.88rem;
+      color: #cbd5e1;
+      display: flex;
+      gap: 10px;
+      line-height: 1.6;
+    }
+
+    ul.tag-list li::before {
+      content: '✦';
+      color: #b5893d;
+      flex-shrink: 0;
+    }
+
+    .footer-stamp {
+      text-align: center;
+      margin-top: 60px;
+      font-size: 0.6rem;
+      letter-spacing: 3px;
+      color: rgba(255, 255, 255, 0.3);
+      text-transform: uppercase;
+    }
+
+    @media (max-width: 640px) {
+      .char-name {
+        font-size: 2.2rem;
+      }
+      section.block {
+        padding: 22px 18px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="bg-fixed" id="main-canvas">
+    <div class="canvas-dot-overlay"></div>
+    <canvas id="petals-canvas"></canvas>
+  </div>
+
+  <div class="ui-corner-bracket top-left"></div>
+  <div class="ui-corner-bracket bottom-right"></div>
+
+  <div class="content-wrap">
+
+    <a href="index.html" class="back-link">← Back</a>
+
+    <header class="char-header">
+      <span class="char-eyebrow">Crimson Reaper</span>
+      <h1 class="char-name">Valentine Alfheim</h1>
+      <span class="char-subname">Val · Father of Nordlys</span>
+    </header>
+
+    <section class="block">
+      <h2 class="section-title">Lore</h2>
+      <p class="lore-text">La infancia de Valentine nunca conoció la calidez de un hogar. Criada bajo el yugo de una familia aristocrática de magia ancestral, cada mínimo error era castigado con crueldad y exigencias inhumanas. La presión constante en la pequeña quebró su espíritu hasta que en un estallido de ira, la magia dormida de su linaje despertó como un torrente incontrolable. Ese día, un fuego rojizo y negro recorrió sus venas y consumió a sus progenitores. Fue la primera vez que manifestó su maldición, donde la energía rojiza semejante al fuego oscureció la carne de sus brazos, dejando esas marcas oscuras como un recordatorio eterno de su pecado.</p>
+      <p class="lore-text">Vagando sola por doquier, sin ser aceptada en ningún orfanato, vista como un monstruo y abandonada a su suerte con tan solo ocho años, fue acogida por la líder de un poderoso grupo mafioso. La mujer vio en Valentine un arma perfecta y la moldeó para ser su sicaria más despiadada. Sirvió con lealtad ciega durante años, hasta el día en que Madam Mour ordenó ejecutar a unos niños huérfanos ante ella por simple diversión. Incapaz de masacrar aquellas almas puras, el fantasma de su propia infancia le detuvo; en lugar de cumplir la orden, Valentine encaró a su mentora, su figura materna, y la asesinó en un acto de completa furia, protegiendo aquellos niños y tomando el control absoluto de la organización con apenas dieciséis años cumplidos. A sus veintisiete años, la maldición en su cuerpo dejó visible su carencia de envejecer, otorgándole una inmortalidad inesperada para ella.</p>
+    </section>
+
+    <section class="block">
+      <p class="lore-text">Tras la caída de Madam Mour, creó el orfanato Nordlys e impuso su título de "Father" para sus integrantes. Este orfanato se encuentra dentro de su mansión, aprovechando el espacio amplio de ésta para recoger a los huérfanos desamparados de las calles o situaciones comprometidas, prometiéndose a sí misma que ningún niño bajo su techo volvería a sufrir en aquel mundo cruel.</p>
+      <p class="lore-text">Valentine los educa, protege y entrena para el mundo, pero cada "hijo" tiene la libertad de elegir su propio camino. La mayoría de éstos buscan entrenarse para ser espías o servir a la familia, otros optan por vidas y carreras más comunes, sin salir del ala de su "padre".</p>
+      <p class="lore-text">Si un integrante decide alejarse de la familia y de la vida criminal para tener una vida completamente normal, Valentine les administra una poción mágica que borra sus recuerdos sobre Nordlys y su verdadera identidad. Ésta es creada con su sangre, la cual posee propiedades que aún desconoce en su totalidad, pero sirve para arrebatar para siempre esa identidad y permitirles vivir lejos de la mafia. Es su forma de protegerlos.</p>
+    </section>
+
+    <section class="block">
+      <h2 class="section-title">Personality</h2>
+      <p class="lore-text">Valentine tiene dos facetas, una fría, calculadora y seria para el mundo exterior, mientras que para los suyos, calidez y comprensión a pesar de su inexpresividad.</p>
+      <p class="lore-text">En las mesas de negociación, Valentine no regala sonrisas ni alza la voz. Su presencia es silenciosa y dominante. Examina a las personas intentando detectar sus debilidades antes de que el otro siquiera empiece a hablar. No toma decisiones por impulso o corazonada. Cada pacto, contrabando o movimiento del sindicato está fríamente calculado. Si alguien rompe un acuerdo con ella, no habrá gritos ni dramatismo: solo una sentencia de muerte despiadada ejecutada por sus propias manos. Tampoco necesita desenvainar un arma para hacerse obedecer; basta una mirada directa con sus ojos poseedores de aquel brillo peculiar para infundir respeto y temor.</p>
+      <p class="lore-text">Con su familia es… dulce a su manera. Tras las puertas cerradas de Nordlys, la armadura de la jefa mafiosa cae. Aunque mantiene su porte sobrio y elegante, su trato hacia los niños y las personas que realmente han ganado su corazón es sumamente atento, leal y cariñoso. Su ternura no suele expresarse en palabras, sino en acciones constantes; comprueba personalmente que no pasen frío, recuerda la comida favorita de cada huérfano, acaricia sus cabezas o les lleva obsequios tras una larga jornada. Siempre está viéndolos desde las sombras. Un niño de Nordlys puede cometer un error, pero Valentine jamás lo abandonará, siempre buscará educarlos adecuadamente y los defenderá con su propia vida si alguien intentase hacerles daño.</p>
+    </section>
+
+    <section class="block">
+      <h2 class="section-title">Physical Appearance</h2>
+      <p class="lore-text">Es pálida, enmarcada por un cabello blanco como la nieve con mechones negros que caen a los lados enmarcando su rostro. Sus ojos son su rasgo más inquietante: orbes oscuros con pupilas en forma de cruz carmesí, una marca inconfundible de su sangre maldita.</p>
+      <p class="lore-text">Viste trajes sastre monocromáticos para denotar su estatus, disciplina y autoridad, alejándose de las armaduras toscas para proyectar la elegancia de la alta alcurnia.</p>
+      <p class="lore-text">Sus manos y antebrazos están cubiertos por una pigmentación negro azabache, como si la carne hubiera sido consumida al punto de parecer carbón. Aunque a menudo las cubre con guantes, estas marcas son las cicatrices físicas del descontrol de su poder.</p>
+      <p class="lore-text">En su pecho lleva engarzado una pieza mágica que ayuda a mantener un seguimiento de su magia. Si bien posee un buen control de ésta por los años de entrenamiento y contención, quiere ser precavida. Este broche rúnico también funciona como si fuese un amortiguador.</p>
+    </section>
+
+    <section class="block">
+      <h2 class="section-title">Abilities</h2>
+      <p class="roleplay-note">Atención: no roleo battle, esto es solo información extra de lo que es capaz y lo destructiva que es su maldición.</p>
+      <p class="lore-text"><span class="ability-name">Guadaña Carmesí:</span> cuando necesita ejecutar enemigos rápidamente, de las marcas oscuras de la palma de sus manos, emana un fuego rojo que poco a poco se amolda en una gran guadaña de sangre flameante.</p>
+      <p class="lore-text">Con un ataque asestado, Valentine aplica una marca mágica en sus enemigos. Esta marca consume poco a poco la vitalidad del oponente y le permite a ella rastrearlo, sabiendo exactamente dónde está. Esto provoca que sus ataques se tornen rápidos.</p>
+      <p class="lore-text">Por unos breves segundos, Valentine puede flotar y deslizarse a gran velocidad hacia su contrincante manifestando una sola ala de fuego rojo en su espalda. Le permite acortar distancias en un segundo o simplemente desplazarse.</p>
+      <p class="lore-text">Cuando se ve acorralada o necesita terminar una amenaza abrupta, libera una explosión de fuego carmesí y negro a su alrededor. Este destello permite que sane sus propias heridas al instante, limpiando una parte del daño de su cuerpo.</p>
+    </section>
+
+    <section class="block">
+      <h2 class="section-title">Hobbies &amp; Interests</h2>
+      <ul class="tag-list">
+        <li>Le gusta la música, en especial la clásica.</li>
+        <li>Sabe tocar varios instrumentos, entre ellos el piano, el arpa y el violín.</li>
+        <li>Le gusta leer, posee una amplia biblioteca en su mansión.</li>
+        <li>Posee una amplia variedad de té, algo que adora beber.</li>
+        <li>Le gusta tararear algunas melodías para ayudar a los niños a dormir cuando se lo piden, aunque parece que no por su expresión.</li>
+      </ul>
+    </section>
+
+    <section class="block">
+      <h2 class="section-title">Headcanons</h2>
+      <ul class="tag-list">
+        <li>Sus padres eran noruegos, pero ella nació en Francia. Sin embargo, por el entrenamiento que ha recibido conoce numerosos idiomas, por algo puede negociar mundialmente.</li>
+        <li>Val posee numerosas cicatrices en su cuerpo, en especial en su espalda.</li>
+        <li>Sus uñas son retráctiles.</li>
+        <li>Su temperatura corporal es ligeramente mayor a la de un humano normal.</li>
+        <li>El color de sus ojos es negro, pero posee una especie de cruz en éstos de color rojo, el cual brilla al antojo de Valentine.</li>
+        <li>Duerme muy poco, suele hacerlo por las tardes, un par de horas.</li>
+        <li>Así como es capaz de crear su guadaña con su magia, es capaz de crear...otras cosas.</li>
+        <li>Por todo lo que ha tenido que vivir y sobrevivir, posee una tolerancia considerable al dolor.</li>
+      </ul>
+    </section>
+
+    <p class="footer-stamp"> — Nordlys · House of Val — <br><a href="gallery.html" style="color: rgba(255,255,255,0.5); text-decoration: none;">Voir la Galerie →</a>
+</p>
+
+  </div>
+
+  <script>
+    // --- pétalos ---
+    const mainCanvas = document.getElementById('main-canvas');
+    const petalCanvas = document.getElementById('petals-canvas');
+    const ctx = petalCanvas.getContext('2d');
+
+    function resizeCanvas() {
+      petalCanvas.width = window.innerWidth;
+      petalCanvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    setTimeout(resizeCanvas, 100);
+
+    const petalsArray = [];
+    const maxPetals = 30;
+
+    class Petal {
+      constructor() {
+        this.x = Math.random() * petalCanvas.width;
+        this.y = Math.random() * -petalCanvas.height;
+        this.size = Math.random() * 5 + 3;
+        this.speedY = Math.random() * 0.7 + 0.3;
+        this.speedX = Math.random() * 0.4 - 0.2;
+        this.angle = Math.random() * 360;
+        this.spin = Math.random() * 0.8 - 0.4;
+        const colors = [
+          'rgba(239, 68, 68, 0.25)',
+          'rgba(249, 115, 22, 0.20)',
+          'rgba(254, 205, 211, 0.25)'
+        ];
+        this.color = colors[Math.floor(Math.random() * colors.length)];
+      }
+      update() {
+        this.y += this.speedY;
+        this.x += this.speedX + Math.sin(this.y / 40) * 0.25;
+        this.angle += this.spin;
+        if (this.y > petalCanvas.height + 10) {
+          this.y = -10;
+          this.x = Math.random() * petalCanvas.width;
+        }
+      }
+      draw() {
+        ctx.save();
+        ctx.translate(this.x, this.y);
+        ctx.rotate((this.angle * Math.PI) / 180);
+        ctx.fillStyle = this.color;
+        ctx.beginPath();
+        ctx.ellipse(0, 0, this.size, this.size / 1.8, 0, 0, 2 * Math.PI);
+        ctx.fill();
+        ctx.restore();
+      }
+    }
+
+    for (let i = 0; i < maxPetals; i++) {
+      petalsArray.push(new Petal());
+    }
+
+    function animatePetals() {
+      ctx.clearRect(0, 0, petalCanvas.width, petalCanvas.height);
+      for (let i = 0; i < petalsArray.length; i++) {
+        petalsArray[i].update();
+        petalsArray[i].draw();
+      }
+      requestAnimationFrame(animatePetals);
+    }
+    animatePetals();
+  </script>
+</body>
+
+</html>
