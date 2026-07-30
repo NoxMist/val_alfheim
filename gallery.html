@@ -3,6 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="./gallery-style.css">
+    <link rel="stylesheet" href="./nav.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nordlys Gallery</title>
   </head>
@@ -11,20 +12,27 @@
     <div class="glow"></div>
     <canvas id="petals-canvas"></canvas>
 
-    <nav>
-      <div class="logo">
-        <a href="index.html" style="text-decoration:none; color:inherit;">
+    <nav class="site-nav">
+      <div class="site-nav__brand">
+        <a href="index.html">
           <h1>Nordlys</h1>
+          <p>Portraits, sanctuaire &amp; musique</p>
         </a>
-        <p>Portraits, sanctuaire &amp; musique</p>
       </div>
-      <ul class="menu">
-        <li><a href="index.html" style="color: inherit; text-decoration: none;">Home</a></li>
-        <li class="active">Images</li>
-        <li><a href="article.html" style="color: inherit; text-decoration: none;">Information</a></li>
-      </ul>
-      <div class="nav-right">
-        <span class="lang"><b>Valentine Alfheim</b></span>
+
+      <button class="site-nav__toggle" aria-label="Abrir menú" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+
+      <ul class="site-nav__menu">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="article.html">Information</a></li>
+      <li><a href="gallery.html">Images</a></li>
+      <li><a href="article2.html">Relationships</a></li>
+    </ul>
+
+      <div class="site-nav__tag">
+        <span><b>Valentine Alfheim</b></span>
       </div>
     </nav>
 
@@ -106,5 +114,6 @@
     }
     </script>
     <script type="module" src="./gallery-script.js"></script>
+    <script src="./nav.js"></script>
   </body>
 </html>
