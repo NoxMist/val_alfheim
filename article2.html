@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nordlys — Relationships</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&family=Syncopate:wght@700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./nav.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      height: 100%;
+    }
+
+    body {
+      background: #060608;
+      background-image: radial-gradient(circle at center, #2b0404 0%, #060608 100%);
+      font-family: 'Noto Sans JP', sans-serif;
+      color: #e2e8f0;
+      position: relative;
+      overflow-x: hidden;
+    }
+ /* --- --- */
+    /* --- capa de fondo fija (pétalos + puntos) --- */
+    .bg-fixed {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .canvas-dot-overlay {
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(rgba(255, 255, 255, 0.04) 15%, transparent 16%);
+      background-size: 6px 6px;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    #petals-canvas {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    .ui-corner-bracket {
+      position: fixed;
+      width: 15px;
+      height: 15px;
+      border: 2px solid rgba(255, 255, 255, 0.15);
+      z-index: 30;
+      pointer-events: none;
+    }
+
+    .top-left {
+      top: 25px;
+      left: 25px;
+      border-right: none;
+      border-bottom: none;
+    }
+
+    .bottom-right {
+      bottom: 25px;
+      right: 25px;
+      border-left: none;
+      border-top: none;
+    }
+
+    /* --- contenido --- */
+    .content-wrap {
+      position: relative;
+      z-index: 10;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 150px 30px 120px;
+    }
+
+    .page-header {
+      margin-bottom: 60px;
+      border-left: 3px solid #c9946f;
+      padding-left: 18px;
+    }
+
+    .page-eyebrow {
+      font-family: 'Syncopate', sans-serif;
+      font-size: 0.7rem;
+      letter-spacing: 4px;
+      color: #c9946f;
+      text-transform: uppercase;
+    }
+
+    .page-title {
+      font-size: 3rem;
+      font-weight: 900;
+      color: #ffffff;
+      line-height: 1;
+      letter-spacing: -1px;
+      margin-top: 6px;
+      text-shadow: 2px 2px 0px #5e4319, 4px 4px 25px rgba(0, 0, 0, 0.9);
+    }
+
+    .page-lead {
+      font-size: 0.85rem;
+      color: #94a3b8;
+      letter-spacing: 1px;
+      margin-top: 10px;
+      max-width: 480px;
+      line-height: 1.7;
+    }
+
+    /* --- carrusel --- */
+    .ship-carousel {
+      position: relative;
+    }
+
+    .ship-track {
+      display: flex;
+      gap: 22px;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      padding: 8px 4px 26px;
+      scrollbar-width: none;
+    }
+
+    .ship-track::-webkit-scrollbar {
+      display: none;
+    }
+
+    .ship-card {
+      flex: 0 0 auto;
+      width: 240px;
+      scroll-snap-align: start;
+      cursor: pointer;
+      background: rgba(6, 6, 8, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 8px;
+      overflow: hidden;
+      transition: border-color 0.3s, transform 0.3s;
+    }
+
+    .ship-card:hover {
+      border-color: #c9946f;
+      transform: translateY(-4px);
+    }
+
+    .ship-card .ship-img {
+      width: 100%;
+      height: 300px;
+      object-fit: cover;
+      display: block;
+      filter: grayscale(0.6) brightness(0.75);
+      transition: filter 0.4s;
+    }
+
+    .ship-card:hover .ship-img {
+      filter: none;
+    }
+
+    .ship-card-label {
+      padding: 14px 16px 16px;
+    }
+
+    .ship-card-name {
+      font-family: 'Syncopate', sans-serif;
+      font-size: 0.72rem;
+      letter-spacing: 1.5px;
+      color: #ffffff;
+      text-transform: uppercase;
+    }
+
+    .ship-card-sub {
+      margin-top: 5px;
+      font-size: 0.68rem;
+      color: #b5893d;
+      letter-spacing: 1px;
+    }
+
+    .ship-arrows {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-top: 14px;
+    }
+
+    .ship-arrow {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      background: rgba(6, 6, 8, 0.4);
+      color: #e2e8f0;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: border-color 0.3s, color 0.3s;
+    }
+
+    .ship-arrow:hover {
+      border-color: #c9946f;
+      color: #c9946f;
+    }
+
+    /* --- modal --- */
+    .ship-modal-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 200;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(6, 6, 8, 0.82);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+      padding: 24px;
+    }
+
+    .ship-modal-backdrop.is-open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .ship-modal {
+      position: relative;
+      width: 100%;
+      max-width: 640px;
+      max-height: 86vh;
+      overflow-y: auto;
+      background: #0a0a0d;
+      background-image: radial-gradient(circle at top, rgba(70, 3, 3, 0.4) 0%, #0a0a0d 65%);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      padding: 0 0 34px;
+      transform: translateY(16px);
+      transition: transform 0.3s ease;
+    }
+
+    .ship-modal-backdrop.is-open .ship-modal {
+      transform: translateY(0);
+    }
+
+    .ship-modal-img {
+      width: 100%;
+      height: 300px;
+      object-fit: cover;
+      border-radius: 10px 10px 0 0;
+      display: block;
+    }
+
+    .ship-modal-close {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      background: rgba(6, 6, 8, 0.55);
+      color: #fff;
+      font-size: 0.9rem;
+      cursor: pointer;
+      z-index: 2;
+    }
+
+    .ship-modal-close:hover {
+      border-color: #c9946f;
+      color: #c9946f;
+    }
+
+    .ship-modal-body {
+      padding: 26px 32px 0;
+    }
+
+    .ship-modal-eyebrow {
+      font-family: 'Syncopate', sans-serif;
+      font-size: 0.6rem;
+      letter-spacing: 3px;
+      color: #c9946f;
+      text-transform: uppercase;
+    }
+
+    .ship-modal-name {
+      font-size: 1.8rem;
+      font-weight: 900;
+      color: #ffffff;
+      margin-top: 6px;
+      letter-spacing: -0.5px;
+    }
+
+    .ship-modal-desc {
+      margin-top: 16px;
+      font-size: 0.88rem;
+      line-height: 1.8;
+      color: #cbd5e1;
+      text-align: justify;
+    }
+
+    @media (max-width: 640px) {
+      .content-wrap {
+        padding: 130px 20px 100px;
+      }
+
+      .page-title {
+        font-size: 2.1rem;
+      }
+
+      .ship-card {
+        width: 190px;
+      }
+
+      .ship-card .ship-img {
+        height: 240px;
+      }
+
+      .ship-modal-name {
+        font-size: 1.4rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="bg-fixed" id="main-canvas">
+    <div class="canvas-dot-overlay"></div>
+    <canvas id="petals-canvas"></canvas>
+  </div>
+
+  <div class="ui-corner-bracket top-left"></div>
+  <div class="ui-corner-bracket bottom-right"></div>
+
+  <nav class="site-nav">
+    <div class="site-nav__brand">
+      <a href="index.html">
+        <h1>Nordlys</h1>
+        <p>Portraits, sanctuaire &amp; musique</p>
+      </a>
+    </div>
+
+    <button class="site-nav__toggle" aria-label="Abrir menú" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+
+    <ul class="site-nav__menu">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="article.html">Information</a></li>
+      <li><a href="gallery.html">Images</a></li>
+      <li><a href="article2.html">Relationships</a></li>
+    </ul>
+
+    <div class="site-nav__tag">
+      <span><b>Valentine Alfheim</b></span>
+    </div>
+  </nav>
+
+  <div class="content-wrap">
+
+    <header class="page-header">
+      <span class="page-eyebrow">Nordlys · Archives</span>
+      <h1 class="page-title">Relationships</h1>
+      <p class="page-lead">Bonds, stories and dynamics developed with Valentine. <br> Click on an image to see the details.</p>
+    </header>
+
+      <div class="ship-carousel">
+        <div class="ship-track" id="shipTrack">
+          <article class="ship-card" data-name="Coming Soon" data-sub="Nothing here" data-desc="Coming soon"> 
+          <img class="ship-img" src="img/" alt="" crossorigin="anonymous">
+          <div class="ship-card-label">
+            <div class="ship-card-name">Nothing here Yet</div>
+            <div class="ship-card-sub">Nothing here</div>
+          </div>
+        </article>
+
+        <article class="ship-card" data-name="Coming Soon" data-sub="Nothing here" data-desc="Coming soon"> 
+          <img class="ship-img" src="img/" alt="" crossorigin="anonymous">
+          <div class="ship-card-label">
+            <div class="ship-card-name">Nothing here Yet</div>
+            <div class="ship-card-sub">Nothing here</div>
+          </div>
+        </article>
+        <article class="ship-card" data-name="Coming Soon" data-sub="Nothing here" data-desc="Coming soon"> 
+          <img class="ship-img" src="img/" alt="" crossorigin="anonymous">
+          <div class="ship-card-label">
+            <div class="ship-card-name">Nothing here Yet</div>
+            <div class="ship-card-sub">Nothing here</div>
+          </div>
+        </article>
+        <article class="ship-card" data-name="Coming Soon" data-sub="Nothing here" data-desc="Coming soon"> 
+          <img class="ship-img" src="img/" alt="" crossorigin="anonymous">
+          <div class="ship-card-label">
+            <div class="ship-card-name">Nothing here Yet</div>
+            <div class="ship-card-sub">Nothing here</div>
+          </div>
+        </article>
+        </div>
+
+      <div class="ship-arrows">
+        <button class="ship-arrow" id="shipPrev">←</button>
+        <button class="ship-arrow" id="shipNext">→</button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- modal -->
+  <div class="ship-modal-backdrop" id="shipModalBackdrop">
+    <div class="ship-modal">
+      <button class="ship-modal-close" id="shipModalClose">✕</button>
+      <img class="ship-modal-img" id="shipModalImg" src="" alt="">
+      <div class="ship-modal-body">
+        <span class="ship-modal-eyebrow">Relationship</span>
+        <h3 class="ship-modal-name" id="shipModalName"></h3>
+        <p class="ship-modal-desc" id="shipModalDesc"></p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // --- pétalos ---
+    const petalCanvas = document.getElementById('petals-canvas');
+    const ctx = petalCanvas.getContext('2d');
+
+    function resizeCanvas() {
+      petalCanvas.width = window.innerWidth;
+      petalCanvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    setTimeout(resizeCanvas, 100);
+
+    const petalsArray = [];
+    const maxPetals = 30;
+
+    class Petal {
+      constructor() {
+        this.x = Math.random() * petalCanvas.width;
+        this.y = Math.random() * -petalCanvas.height;
+        this.size = Math.random() * 5 + 3;
+        this.speedY = Math.random() * 0.7 + 0.3;
+        this.speedX = Math.random() * 0.4 - 0.2;
+        this.angle = Math.random() * 360;
+        this.spin = Math.random() * 0.8 - 0.4;
+        const colors = [
+          'rgba(239, 68, 68, 0.25)',
+          'rgba(249, 115, 22, 0.20)',
+          'rgba(254, 205, 211, 0.25)'
+        ];
+        this.color = colors[Math.floor(Math.random() * colors.length)];
+      }
+      update() {
+        this.y += this.speedY;
+        this.x += this.speedX + Math.sin(this.y / 40) * 0.25;
+        this.angle += this.spin;
+        if (this.y > petalCanvas.height + 10) {
+          this.y = -10;
+          this.x = Math.random() * petalCanvas.width;
+        }
+      }
+      draw() {
+        ctx.save();
+        ctx.translate(this.x, this.y);
+        ctx.rotate((this.angle * Math.PI) / 180);
+        ctx.fillStyle = this.color;
+        ctx.beginPath();
+        ctx.ellipse(0, 0, this.size, this.size / 1.8, 0, 0, 2 * Math.PI);
+        ctx.fill();
+        ctx.restore();
+      }
+    }
+
+    for (let i = 0; i < maxPetals; i++) {
+      petalsArray.push(new Petal());
+    }
+
+    function animatePetals() {
+      ctx.clearRect(0, 0, petalCanvas.width, petalCanvas.height);
+      for (let i = 0; i < petalsArray.length; i++) {
+        petalsArray[i].update();
+        petalsArray[i].draw();
+      }
+      requestAnimationFrame(animatePetals);
+    }
+    animatePetals();
+
+    // --- carrusel: flechas ---
+    const track = document.getElementById('shipTrack');
+    const scrollAmount = () => (track.querySelector('.ship-card')?.offsetWidth || 240) + 22;
+
+    document.getElementById('shipNext').addEventListener('click', () => {
+      track.scrollBy({ left: scrollAmount(), behavior: 'smooth' });
+    });
+    document.getElementById('shipPrev').addEventListener('click', () => {
+      track.scrollBy({ left: -scrollAmount(), behavior: 'smooth' });
+    });
+
+    // --- modal: abrir con los datos de la card clickeada ---
+    const backdrop = document.getElementById('shipModalBackdrop');
+    const modalImg = document.getElementById('shipModalImg');
+    const modalName = document.getElementById('shipModalName');
+    const modalDesc = document.getElementById('shipModalDesc');
+
+    function openShipModal(card) {
+      modalImg.src = card.querySelector('img').src;
+      modalName.textContent = card.dataset.name || '';
+      modalDesc.textContent = card.dataset.desc || '';
+      backdrop.classList.add('is-open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeShipModal() {
+      backdrop.classList.remove('is-open');
+      document.body.style.overflow = '';
+    }
+
+    document.querySelectorAll('.ship-card').forEach((card) => {
+      card.addEventListener('click', () => openShipModal(card));
+    });
+
+    document.getElementById('shipModalClose').addEventListener('click', closeShipModal);
+    backdrop.addEventListener('click', (e) => {
+      if (e.target === backdrop) closeShipModal();
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeShipModal();
+    });
+  </script>
+  <script src="./nav.js"></script>
+</body>
+
+</html>
